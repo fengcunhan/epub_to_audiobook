@@ -23,6 +23,26 @@ def get_azure_config():
     return GeneralConfig(args)
 
 
+def get_kokoro_config():
+    args = MagicMock(
+        input_file='../../../examples/Lake_Isle.epub',
+        output_folder='output',
+        preview=False,
+        output_text=False,
+        log='INFO',
+        newline_mode='double',
+        chapter_start=1,
+        chapter_end=-1,
+        remove_endnotes=False,
+        tts='kokoro',
+        language='en-US',
+        voice_name='am_michael',
+        output_format='wav',
+        model_name='',
+        break_duration='1250'
+    )
+    return GeneralConfig(args)
+
 def get_openai_config():
     args = MagicMock(
         input_file='../../../examples/The_Life_and_Adventures_of_Robinson_Crusoe.epub',
