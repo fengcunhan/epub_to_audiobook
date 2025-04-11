@@ -67,6 +67,11 @@ class EpubBookParser(BaseBookParser):
                 cleaned_text = re.sub(r'(?<=[a-zA-Z.,!?;”")])\d+', "", cleaned_text)
                 logger.debug(f"Cleaned text step 4: <{cleaned_text[:100]}>")
 
+            # Removes references numbers like [1] or [2.3]
+            if self.config.remove_reference_numbers:
+                cleaned_text = re.sub(r'\[\d+(\.\d+)?\]', '', cleaned_text)
+                logger.debug(f"Cleaned text step 4.1 (removed brackets): <{cleaned_text[:100]}>")
+
             # Does user defined search and replaces
             for search_and_replace in search_and_replaces:
                 cleaned_text = re.sub(search_and_replace['search'], search_and_replace['replace'], cleaned_text)
@@ -80,7 +85,7 @@ class EpubBookParser(BaseBookParser):
                     if soup.find(level):
                         title = soup.find(level).text
                         break
-                if title == "" or re.match(r'^\d{1,3}$',title) is not None:
+                if title.strip() == "" or re.match(r'^\d{1,3}$',title) is not None:
                     title = cleaned_text[:60]
             elif self.config.title_mode == "tag_text":
                 title = ""
@@ -89,7 +94,7 @@ class EpubBookParser(BaseBookParser):
                     if soup.find(level):
                         title = soup.find(level).text
                         break
-                if title == "":
+                if title.strip() == "":
                     title = "<blank>"
             elif self.config.title_mode == "first_few":
                 title = cleaned_text[:60]
